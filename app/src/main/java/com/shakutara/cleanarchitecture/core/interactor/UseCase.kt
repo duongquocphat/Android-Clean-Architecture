@@ -17,10 +17,7 @@ package com.shakutara.cleanarchitecture.core.interactor
 
 import com.shakutara.cleanarchitecture.core.exception.Failure
 import com.shakutara.cleanarchitecture.core.functional.Either
-import kotlinx.coroutines.CommonPool
-import kotlinx.coroutines.android.UI
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 
 /**
@@ -35,11 +32,11 @@ abstract class UseCase<out Type, in Params> where Type : Any {
 
     abstract suspend fun run(params: Params): Either<Failure, Type>
 
-    operator fun invoke(params: Params, onResult: (Either<Failure, Type>) -> Unit = {}) {
-        val job = async(CommonPool) {
-            run(params)
-        }
-        launch(UI) {
+    suspend operator fun invoke(params: Params, onResult: (Either<Failure, Type>) -> Unit = {}) {
+        withContext(Dispatchers.IO) {
+            val job = async {
+                run(params)
+            }
             onResult(job.await())
         }
     }

@@ -1,7 +1,7 @@
 package com.shakutara.cleanarchitecture.core.di.viewmodel
 
-import android.arch.lifecycle.ViewModel
-import android.arch.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.shakutara.cleanarchitecture.features.detail.MovieDetailViewModel
 import com.shakutara.cleanarchitecture.features.list.MoviesViewModel
 import dagger.Binds

@@ -14,8 +14,10 @@ interface MoviesRepository {
     fun movieDetail(id: Int): Either<Failure, MovieDetails>
 
     class Network
-    @Inject constructor(private val networkHandler: NetworkHandler, private val service: MoviesService) :
-        MoviesRepository {
+    @Inject constructor(
+        private val networkHandler: NetworkHandler,
+        private val service: MoviesService
+    ) : MoviesRepository {
         override fun movieDetail(movieId: Int): Either<Failure, MovieDetails> {
             return when (networkHandler.isConnected) {
                 true ->
@@ -48,7 +50,11 @@ interface MoviesRepository {
             }
         }
 
-        private fun <T, R> request(call: Call<T>, transform: (T) -> R, default: T): Either<Failure, R> {
+        private fun <T, R> request(
+            call: Call<T>,
+            transform: (T) -> R,
+            default: T
+        ): Either<Failure, R> {
             return try {
                 val response = call.execute()
                 when (response.isSuccessful) {

@@ -1,7 +1,9 @@
 package com.shakutara.cleanarchitecture.features.detail
 
-import android.arch.lifecycle.MutableLiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.shakutara.cleanarchitecture.core.platform.BaseViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class MovieDetailViewModel
@@ -9,10 +11,17 @@ class MovieDetailViewModel
 
     var movieDetail: MutableLiveData<MovieDetails> = MutableLiveData()
 
-    fun loadMovieDetail() =
-        getMovieDetailUseCase(GetMovieDetailUseCase.Params(38001)) { it.either(::handleFailure, ::handleMovieDetail) }
+    fun loadMovieDetail() {
+        viewModelScope.launch {
+            getMovieDetailUseCase(
+                GetMovieDetailUseCase.Params(38001)
+            ) {
+                it.either(::handleFailure, ::handleMovieDetail)
+            }
+        }
+    }
 
     private fun handleMovieDetail(movieDetails: MovieDetails) {
-        this.movieDetail.value = movieDetails
+        this.movieDetail.postValue(movieDetails)
     }
 }
